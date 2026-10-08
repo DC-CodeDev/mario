@@ -48,7 +48,7 @@ function renderBody(sec, data, targetEl) {
     const p = document.createElement('p');
     p.className = 'sec-para';
     p.textContent = secData.p || '';
-    bodyEl.appendChild(p);
+    container.appendChild(p);
   } else if (sec.type === 'checks') {
     const ul = document.createElement('ul');
     ul.className = 'checks';
@@ -70,7 +70,7 @@ function renderBody(sec, data, targetEl) {
       li.appendChild(textSpan);
       ul.appendChild(li);
     });
-    bodyEl.appendChild(ul);
+    container.appendChild(ul);
 
     if (sec.id === 2 && secData.epp) {
       const eppDiv = document.createElement('div');
@@ -91,7 +91,7 @@ function renderBody(sec, data, targetEl) {
         fig.appendChild(figcap);
         eppDiv.appendChild(fig);
       });
-      bodyEl.appendChild(eppDiv);
+      container.appendChild(eppDiv);
     }
   } else if (sec.type === 'pasos') {
     const stepsContainer = document.createElement('div');
@@ -141,7 +141,7 @@ function renderBody(sec, data, targetEl) {
       stepsContainer.appendChild(groupDiv);
     });
 
-    bodyEl.appendChild(stepsContainer);
+    container.appendChild(stepsContainer);
   } else if (sec.type === 'componentes') {
     const compDiv = document.createElement('div');
     compDiv.className = 'comp';
@@ -210,7 +210,7 @@ function renderBody(sec, data, targetEl) {
     infoDiv.appendChild(ol);
     compDiv.appendChild(photoDiv);
     compDiv.appendChild(infoDiv);
-    bodyEl.appendChild(compDiv);
+    container.appendChild(compDiv);
   } else if (sec.type === 'tabla') {
     const cols = secData.cols || [];
     const rows = secData.rows || [];
@@ -354,8 +354,8 @@ function renderBody(sec, data, targetEl) {
       tableCards.appendChild(card);
     });
 
-    bodyEl.appendChild(tableWide);
-    bodyEl.appendChild(tableCards);
+    container.appendChild(tableWide);
+    container.appendChild(tableCards);
   } else if (sec.type === 'planilla') {
     const formCols = secData.cols || [];
 
@@ -388,7 +388,7 @@ function renderBody(sec, data, targetEl) {
       }
       form.appendChild(rowDiv);
     }
-    bodyEl.appendChild(form);
+    container.appendChild(form);
 
     const signRow = document.createElement('div');
     signRow.className = 'form-signatures';
@@ -415,7 +415,7 @@ function renderBody(sec, data, targetEl) {
 
     signRow.appendChild(respDiv);
     signRow.appendChild(firmaDiv);
-    bodyEl.appendChild(signRow);
+    container.appendChild(signRow);
 
     const printActions = document.createElement('div');
     printActions.className = 'form-actions';
@@ -428,7 +428,7 @@ function renderBody(sec, data, targetEl) {
       window.print();
     });
     printActions.appendChild(printBtn);
-    bodyEl.appendChild(printActions);
+    container.appendChild(printActions);
   }
 }
 
