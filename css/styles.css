@@ -127,11 +127,28 @@ button {
   gap: 12px;
 }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-brand-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, .3);
+}
+
 .header-top img {
   width: 48px;
   height: 48px;
   border-radius: 4px;
   display: block;
+}
+
+.header-owner-logo {
+  border: 1px solid rgba(255, 255, 255, .25);
+  object-fit: cover;
 }
 
 .lang-toggle {
@@ -315,6 +332,26 @@ button {
   height: 32px;
   border-radius: 3px;
   display: block;
+}
+
+.footer-owner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: .04em;
+  color: #fff;
+}
+
+.footer-owner-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  display: block;
+  object-fit: cover;
 }
 
 .to-top {
