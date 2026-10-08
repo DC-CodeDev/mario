@@ -101,16 +101,14 @@ function toggleSection(id) {
   }
 
   const newState = !isOpen;
-  const btn = document.querySelector(`.sec[id="sec-${id}"] .sec-head`);
+  const secEl = document.getElementById(`sec-${id}`);
+  const btn = secEl ? secEl.querySelector('.sec-head') : null;
   const body = document.getElementById(`body-${id}`);
 
+  if (secEl) secEl.classList.toggle('is-open', newState);
   if (btn) btn.setAttribute('aria-expanded', newState ? 'true' : 'false');
   if (body) {
-    if (newState) {
-      body.removeAttribute('hidden');
-    } else {
-      body.setAttribute('hidden', '');
-    }
+    body.inert = !newState;
   }
 
   updateNavAllButton();
@@ -119,23 +117,26 @@ function toggleSection(id) {
 function goToSection(id) {
   state.active = id;
 
+  const target = document.getElementById('sec-' + id);
+  const nav = document.querySelector('.site-nav');
+  const navHeight = nav ? nav.offsetHeight : 0;
+  const targetTop = target ? (target.getBoundingClientRect().top + window.scrollY - navHeight - 10) : 0;
+
   if (!state.open.includes(id)) {
     state.open.push(id);
-    const btn = document.querySelector(`.sec[id="sec-${id}"] .sec-head`);
+    const secEl = target;
+    const btn = secEl ? secEl.querySelector('.sec-head') : null;
     const body = document.getElementById(`body-${id}`);
+    if (secEl) secEl.classList.add('is-open');
     if (btn) btn.setAttribute('aria-expanded', 'true');
-    if (body) body.removeAttribute('hidden');
+    if (body) body.inert = false;
     updateNavAllButton();
   }
 
   updateActiveChip(id);
 
-  const target = document.getElementById('sec-' + id);
-  const nav = document.querySelector('.site-nav');
   if (target) {
-    const navHeight = nav ? nav.offsetHeight : 0;
-    const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 10;
-    window.scrollTo({ top, behavior: 'smooth' });
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
   }
 }
 
@@ -149,18 +150,16 @@ function toggleAllSections() {
     state.open = CONFIG.SECTIONS.map((s) => s.id);
   }
 
+  const newState = !allOpen;
   CONFIG.SECTIONS.forEach((s) => {
     const id = s.id;
-    const isOpen = !allOpen;
-    const btn = document.querySelector(`.sec[id="sec-${id}"] .sec-head`);
+    const secEl = document.getElementById(`sec-${id}`);
+    const btn = secEl ? secEl.querySelector('.sec-head') : null;
     const body = document.getElementById(`body-${id}`);
-    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (secEl) secEl.classList.toggle('is-open', newState);
+    if (btn) btn.setAttribute('aria-expanded', newState ? 'true' : 'false');
     if (body) {
-      if (isOpen) {
-        body.removeAttribute('hidden');
-      } else {
-        body.setAttribute('hidden', '');
-      }
+      body.inert = !newState;
     }
   });
 
@@ -177,43 +176,67 @@ function setLanguage(lang) {
     // localStorage may fail, proceed gracefully
   }
 
-  const data = getData(state.lang);
+  const fadeTargets = [
+    document.getElementById('sections'),
+    document.querySelector('.site-title'),
+    document.querySelector('.site-lead')
+  ].filter(Boolean);
 
-  // 1. Textos fijos
-  renderUI(state.lang);
+  fadeTargets.forEach((el) => {
+    el.style.transition = 'opacity 120ms ease';
+    el.style.opacity = '0';
+  });
 
-  // 2. Chips del indice
-  renderNav(state.lang, state);
+  setTimeout(() => {
+    const data = getData(state.lang);
 
-  // 3. Titulos de TODAS las secciones
-  CONFIG.SECTIONS.forEach((sec) => {
-    const n = sec.id;
-    const secData = data['s' + n] || {};
-    const titleSpan = document.querySelector(`#sec-${n} .sec-title`);
-    if (titleSpan) {
-      titleSpan.textContent = secData.t || '';
-      if (secData.sub) {
-        const subSpan = document.createElement('span');
-        subSpan.className = 'sec-sub';
-        subSpan.textContent = ' ' + secData.sub;
-        titleSpan.appendChild(subSpan);
+    // 1. Textos fijos
+    renderUI(state.lang);
+
+    // 2. Chips del indice
+    renderNav(state.lang, state);
+
+    // 3. Titulos de TODAS las secciones
+    CONFIG.SECTIONS.forEach((sec) => {
+      const n = sec.id;
+      const secData = data['s' + n] || {};
+      const titleSpan = document.querySelector(`#sec-${n} .sec-title`);
+      if (titleSpan) {
+        titleSpan.textContent = secData.t || '';
+        if (secData.sub) {
+          const subSpan = document.createElement('span');
+          subSpan.className = 'sec-sub';
+          subSpan.textContent = ' ' + secData.sub;
+          titleSpan.appendChild(subSpan);
+        }
       }
-    }
-  });
+    });
 
-  // 4. Cuerpos de TODAS las secciones (abiertas y cerradas)
-  CONFIG.SECTIONS.forEach((sec) => {
-    renderBody(sec, data);
-  });
+    // 4. Cuerpos de TODAS las secciones (abiertas y cerradas)
+    CONFIG.SECTIONS.forEach((sec) => {
+      renderBody(sec, data);
+    });
 
-  // 5. Boton .nav-all
-  updateNavAllButton();
+    // 5. Boton .nav-all
+    updateNavAllButton();
 
-  // 6. Botones de idioma
-  updateLangButtonsUI();
+    // 6. Botones de idioma
+    updateLangButtonsUI();
 
-  // 7. Marcador activo
-  updateMarkerUI();
+    // 7. Marcador activo
+    updateMarkerUI();
+
+    // Fade in
+    fadeTargets.forEach((el) => {
+      el.style.opacity = '1';
+    });
+
+    setTimeout(() => {
+      fadeTargets.forEach((el) => {
+        el.style.transition = '';
+      });
+    }, 120);
+  }, 120);
 }
 
 function setupScrollSpy() {
@@ -307,6 +330,10 @@ function init() {
   updateLangButtonsUI();
   updateMarkerUI();
   setupEventListeners();
+
+  setTimeout(() => {
+    document.body.classList.remove('page-entering');
+  }, 600);
 }
 
 document.addEventListener('DOMContentLoaded', init);

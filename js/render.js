@@ -35,9 +35,13 @@ function renderNav(lang, state) {
 }
 
 function renderBody(sec, data, targetEl) {
-  const bodyEl = targetEl || document.getElementById('body-' + sec.id);
-  if (!bodyEl) return;
-  bodyEl.innerHTML = '';
+  let container = targetEl;
+  if (!container) {
+    const bodyEl = document.getElementById('body-' + sec.id);
+    container = bodyEl ? (bodyEl.querySelector('.sec-inner') || bodyEl) : null;
+  }
+  if (!container) return;
+  container.innerHTML = '';
   const secData = data['s' + sec.id] || {};
 
   if (sec.type === 'para') {
@@ -444,7 +448,7 @@ function renderSections(lang, state) {
 
     const sectionEl = document.createElement('section');
     sectionEl.id = 'sec-' + n;
-    sectionEl.className = 'sec' + (sec.half ? ' sec--half' : '') + (n === 2 ? ' sec--safety' : '');
+    sectionEl.className = 'sec' + (sec.half ? ' sec--half' : '') + (n === 2 ? ' sec--safety' : '') + (isOpen ? ' is-open' : '');
 
     const h2 = document.createElement('h2');
     const btn = document.createElement('button');
@@ -486,11 +490,13 @@ function renderSections(lang, state) {
     const bodyEl = document.createElement('div');
     bodyEl.id = 'body-' + n;
     bodyEl.className = 'sec-body';
-    if (!isOpen) {
-      bodyEl.setAttribute('hidden', '');
-    }
+    bodyEl.inert = !isOpen;
 
-    renderBody(sec, data, bodyEl);
+    const innerEl = document.createElement('div');
+    innerEl.className = 'sec-inner';
+    renderBody(sec, data, innerEl);
+    bodyEl.appendChild(innerEl);
+
     sectionEl.appendChild(bodyEl);
 
     container.appendChild(sectionEl);
