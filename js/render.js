@@ -12,6 +12,21 @@ function renderUI(lang) {
       el.textContent = data.ui[key];
     }
   });
+
+  const pdfLink = document.getElementById('pdf-link');
+  if (pdfLink && CONFIG.PDF) {
+    const file = CONFIG.PDF[lang] || CONFIG.PDF.es;
+    pdfLink.href = file;
+    const textSpan = pdfLink.querySelector('span');
+    const label = (data.ui && data.ui.pdfLabel) || 'Descargar documentación completa';
+    const type = (data.ui && data.ui.pdfType) || 'PDF';
+    const size = typeof CONFIG.PDF.sizeMB === 'object'
+      ? (CONFIG.PDF.sizeMB[lang] || CONFIG.PDF.sizeMB.es)
+      : (CONFIG.PDF.sizeMB || '0,4');
+    if (textSpan) {
+      textSpan.textContent = `${label} (${type}, ${size} MB)`;
+    }
+  }
 }
 
 function renderNav(lang, state) {

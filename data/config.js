@@ -38,5 +38,13 @@ const CONFIG = {
     { id: 12, type: 'planilla', half: false },
     { id: 13, type: 'pasos', half: true },
     { id: 14, type: 'checks', half: true }
-  ]
+  ],
+  PDF: {
+    es: 'docs/guia-practica-de-mantenimiento-de-camara-frigorifica.pdf',
+    en: 'docs/guia-practica-de-mantenimiento-de-camara-frigorifica.pdf',
+    sizeMB: {
+      es: '0,4',
+      en: '0.4'
+    }
+  }
 };

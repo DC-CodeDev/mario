@@ -1106,3 +1106,49 @@ button:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* Boton descarga de PDF */
+.pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  width: 100%;
+  padding: 0 18px;
+  background: #fff;
+  color: var(--g9);
+  border: 2px solid #fff;
+  border-radius: 6px;
+  font-family: 'Barlow', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.pdf-btn:active {
+  transform: scale(.97);
+}
+
+@media (min-width: 720px) {
+  .pdf-btn {
+    width: auto;
+    justify-self: start;
+    grid-column: 2;
+  }
+}
+
+@media (hover: hover) {
+  .pdf-btn:hover {
+    background: var(--mint);
+  }
+}
+
+@media print {
+  .pdf-btn {
+    display: none !important;
+  }
+}
+
