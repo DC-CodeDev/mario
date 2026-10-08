@@ -43,8 +43,8 @@ const CONFIG = {
     es: 'docs/guia-practica-de-mantenimiento-de-camara-frigorifica.pdf',
     en: 'docs/guia-practica-de-mantenimiento-de-camara-frigorifica.pdf',
     sizeMB: {
-      es: '0,4',
-      en: '0.4'
+      es: '0,5',
+      en: '0.5'
     }
   }
 };
